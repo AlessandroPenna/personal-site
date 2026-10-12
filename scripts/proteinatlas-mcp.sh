@@ -17,4 +17,12 @@ if [ ! -f "$DIR/build/index.js" ]; then
   } 1>&2
 fi
 
+# Behind an HTTPS proxy, axios's own proxy handling sends plain requests the
+# proxy rejects (405). Disable it and let Node's built-in proxy support tunnel.
+if [ -n "${HTTPS_PROXY:-${https_proxy:-}}" ]; then
+  echo "import axios from 'axios'; axios.defaults.proxy = false;" > "$DIR/proxy-preload.mjs"
+  export NODE_USE_ENV_PROXY=1
+  exec node --no-warnings --import "$DIR/proxy-preload.mjs" "$DIR/build/index.js"
+fi
+
 exec node "$DIR/build/index.js"
