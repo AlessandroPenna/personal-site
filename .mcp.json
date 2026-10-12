@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "proteinatlas": {
+      "command": "bash",
+      "args": ["scripts/proteinatlas-mcp.sh"]
+    }
+  }
+}
